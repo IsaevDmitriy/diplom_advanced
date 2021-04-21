@@ -1,0 +1,21 @@
+import sqlalchemy
+
+
+db = 'postgresql://     '
+engine = sqlalchemy.create_engine(db)
+connection = engine.connect()
+
+
+def save_database(profile_user, result):
+    name = profile_user["name"] + ' ' + profile_user["last_name"]
+    connection.execute(f'''INSERT INTO iduser(userid, name, likeuser) 
+    VALUES({profile_user["id"]}, '{name}', {result});''')
+
+
+
+def check_id_user(iduser):
+    response = connection.execute(f'''SELECT * FROM iduser
+                                        WHERE userid = {iduser};''').fetchall()
+    if len(response) == 0:
+        return True
+
