@@ -48,8 +48,6 @@ def photo_selection(user_foto_dict):
         dict_foto = {}
         dict_foto['id'] = 'photo' + str(photo['owner_id']) + '_' + str(photo['id'])
         dict_foto['popular'] = photo['likes']['count'] + photo['comments']['count']
-        # var_url = sorted(photo['sizes'], key=lambda x: x['type'], reverse=True)[:1]
-        # dict_foto['url'] = var_url[0]['url']
         list_foto.append(dict_foto)
     sort_list = sorted(list_foto, key=lambda x: x['popular'], reverse=True)[:3]
     return sort_list
