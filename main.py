@@ -4,7 +4,7 @@ import vk_api
 import json
 from vk_api.longpoll import VkLongPoll, VkEventType
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
-from vk import get_user, download_list_skipped, user_search
+from vk import VkSearch
 from database import save_database
 
 
@@ -39,7 +39,7 @@ def show_photo_keyboadr(user):
         json.dump(user, f, ensure_ascii=False, indent=4)
 
 def show_profile():
-    profile_user = get_user()
+    profile_user = new_search.get_user()
     if profile_user is None:
         write_msg(event.user_id, 'Введите новые параметры поиска')
     else:
@@ -120,7 +120,10 @@ if __name__ == '__main__':
                         city = city_text
 
                 write_msg(event.user_id, f"Выполняем поиск с параметрами: Возраст - {age_text}, Пол - {gender_text}, Город - {city_text}, Семейное положение - {status_text}")
-                user_search(age, gender, city, status)
+
+                new_search = VkSearch(age, gender, city, status)
+                new_search.user_search()
+
                 profile_user = show_profile()
             elif 'Нравится' in query:
                 save_database(profile_user, 1)
@@ -129,7 +132,7 @@ if __name__ == '__main__':
                 save_database(profile_user, 0)
                 profile_user = show_profile()
             elif 'Пропустить' in query:
-                download_list_skipped(profile_user)
+                new_search.download_list_skipped(profile_user)
                 profile_user = show_profile()
             elif 'Новые параметры' in query:
                 write_msg(event.user_id, f"Измените ваши предпочтения. Просто введите новые параметры: возраст, город, пол, статус. Например: возраст 23, город Москва и т.п. Как только параметры будут заданы напишите Ок.")
